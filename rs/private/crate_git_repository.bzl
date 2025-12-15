@@ -29,6 +29,10 @@ def _crate_git_repository_implementation(rctx):
         "worktree",
         "add",
         str(dest_dir),
+        # Two --force flags are needed to override both existing worktree and locked worktrees
+        # that might have been left behind due to a prior build failure.
+        "--force",
+        "--force",
         "--detach",
         "HEAD"
     ])
@@ -48,7 +52,7 @@ def _crate_git_repository_implementation(rctx):
 
     if strip_prefix:
         workspace_cargo_toml = run_toml2json(rctx, repo_dir.get_child(rctx.attr.workspace_cargo_toml))
-        workspace_package = workspace_cargo_toml.get("workspace", {}).get("package")
+        workspace_package = workspace_cargo_toml.get("workspace",   {}).get("package")
         if workspace_package:
             crate_package = cargo_toml["package"]
             for field in _INHERITABLE_FIELDS:

@@ -105,10 +105,10 @@ def generate_build_file(rctx, cargo_toml):
     lib = cargo_toml.get("lib", {})
     is_proc_macro = lib.get("proc-macro") or lib.get("proc_macro") or False
     crate_root = (lib.get("path") or "src/lib.rs").removeprefix("./")
-
     edition = package.get("edition", "2015")
     crate_name = lib.get("name")
     links = package.get("links")
+    print(name, lib, crate_root, crate_name)
 
     build_content = \
 """load("@rules_rs//rs:rust_crate.bzl", "rust_crate")

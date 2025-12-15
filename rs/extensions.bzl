@@ -99,6 +99,13 @@ Make sure you point to the `Cargo.toml` of the workspace, not of `{name}`!”
         return inherited
     return _spec_to_dep_dict_inner(dep, spec, is_build)
 
+def _short_crate_name(name):
+    if name == "windows_x86_64_msvc":
+        return "wx8664ms"
+    if name == "ring":
+        return "r"
+    return name
+
 def _generate_hub_and_spokes(
         mctx,
         hub_name,
@@ -440,7 +447,7 @@ def _generate_hub_and_spokes(
             patches = annotation.patches,
         )
 
-        repo_name = _spoke_repo(hub_name, crate_name, version)
+        repo_name = _spoke_repo(hub_name, _short_crate_name(crate_name), version)
 
         if source.startswith("sparse+"):
             checksum = package["checksum"]
@@ -494,7 +501,7 @@ def _generate_hub_and_spokes(
         binaries = annotations.get(name, DEFAULT_CRATE_ANNOTATION).gen_binaries
 
         for version in versions:
-            spoke_repo = _spoke_repo(hub_name, name, version)
+            spoke_repo = _spoke_repo(hub_name, _short_crate_name(name), version)
 
             hub_contents.append("""
 alias(
